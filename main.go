@@ -5,12 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	db := sqlx.MustOpen("postgres", "postgres://maindb:maindb@maindb:5432/maindb?sslmode=disable")
+	// db := sqlx.MustOpen("postgres", "postgres://maindb:maindb@maindb:5432/maindb?sslmode=disable")
 
 	mux := http.NewServeMux()
 
@@ -27,12 +26,12 @@ func main() {
 			Email string `db:"email"`
 		}
 
-		if err := db.Select(&users, "SELECT id, email FROM users"); err != nil {
-			json.NewEncoder(w).Encode(map[string]interface{}{
-				"error": err.Error(),
-			})
-			return
-		}
+		// if err := db.Select(&users, "SELECT id, email FROM users"); err != nil {
+		// 	json.NewEncoder(w).Encode(map[string]interface{}{
+		// 		"error": err.Error(),
+		// 	})
+		// 	return
+		// }
 
 		json.NewEncoder(w).Encode(users)
 	})
