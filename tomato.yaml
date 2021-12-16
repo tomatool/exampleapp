@@ -4,8 +4,18 @@ spec:
     - ./features
   applications:
     - name: mainapp
+      port: 8080
       build:
         dockerfile: Dockerfile
         context: .
-        ports:
-          - 8080:8080
+      environment:
+        DATABASE_DSN: postgres://exampleuser:examplepass@legacydb:5432/example?sslmode=disable
+  dependencies:
+    - name: legacydb
+      type: postgres
+      image: postgres:9
+      port: 5432
+      environment:
+        POSTGRES_USER: exampleuser
+        POSTGRES_PASSWORD: examplepass
+        POSTGRES_DB: example
