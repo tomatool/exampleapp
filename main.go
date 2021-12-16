@@ -40,6 +40,32 @@ func main() {
 		json.NewEncoder(w).Encode(users)
 	})
 
+	mux.HandleFunc("/users/me", func(w http.ResponseWriter, r *http.Request) {
+		resp, err := http.Get(os.Getenv("USER_SERVICE_BASE_URL") + "/example")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"error": err.Error(),
+			})
+			return
+		}
+		defer resp.Body.Close()
+
+		var respBody struct {
+			UserID string `json:"user_id"`
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"error": err.Error(),
+			})
+			return
+		}
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"username": respBody.UserID,
+		})
+	})
+
 	srv := &http.Server{
 		Addr:    "0.0.0.0:8080",
 		Handler: mux,

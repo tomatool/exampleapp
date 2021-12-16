@@ -10,6 +10,7 @@ spec:
         context: .
       environment:
         DATABASE_DSN: postgres://exampleuser:examplepass@legacydb:5432/example?sslmode=disable
+        USER_SERVICE_BASE_URL: http://user-service:8080
   dependencies:
     - name: legacydb
       type: postgres
@@ -19,3 +20,7 @@ spec:
         POSTGRES_USER: exampleuser
         POSTGRES_PASSWORD: examplepass
         POSTGRES_DB: example
+    - name: user-service
+      type: wiremock
+      image: wiremock/wiremock:2.32.0-alpine
+      port: 8080
